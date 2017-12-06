@@ -98,7 +98,7 @@ public class FixedAreaAction extends CommonAction<FixedArea> {
      */
     @Action("fixedAreaAction_findNoBind")
     public String findNoBind() {
-       List<Customer> list = (List<Customer>) WebClient.create("http://localhost:8180/crm/webservice/cs/customer")
+       List<Customer> list = (List<Customer>) WebClient.create("http://localhost:8180/crm/webservice/cs/customer_unbind")
         .accept(MediaType.APPLICATION_JSON)
         .getCollection(Customer.class);
         listToJSON(list, null);
@@ -113,7 +113,7 @@ public class FixedAreaAction extends CommonAction<FixedArea> {
      */
     @Action("fixedAreaAction_findBindFixedAreaId")
     public String findBindFixedAreaId() {
-        List<Customer> list=(List<Customer>) WebClient.create("http://localhost:8180/crm/webservice/cs/customer/fixedAreaId")
+        List<Customer> list=(List<Customer>) WebClient.create("http://localhost:8180/crm/webservice/cs/customer_bind")
                 .query("fixedAreaId", getModel().getId())
                 .accept(MediaType.APPLICATION_JSON)
                 .getCollection(Customer.class);

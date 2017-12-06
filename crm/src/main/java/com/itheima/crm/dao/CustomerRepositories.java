@@ -28,8 +28,15 @@ public interface CustomerRepositories extends JpaRepository<Customer, Long> {
     @Query("update Customer set fixedAreaId = null where fixedAreaId=?")
     void updateNull(String fixedAreaId);
     
-    @Query("from Customer where username=?1 and password=?2")
-    Customer findCustomerByNamePassword(String username, String password);
+  @Query("from Customer where telephone=? and type=1")
+  Customer findActived(String telephone);
+  
+   @Modifying
+   @Query("update Customer set type=1 where telephone=?")
+   void active(String telephone);
+   
+   @Query("from Customer where telephone=?1 and password=?2 and type=1")
+   Customer findByTelephoneAndPassword(String telephone, String password);
 
 }
   

@@ -45,8 +45,7 @@ public class CustomerServiceImp implements CustomerService{
        if (ids!=null&&ids.size()>0) {
            for (Long long1 : ids) {
                dao.bindFixedArea(fixedAreaId, long1);
-            }
-              
+            }      
     }
      
     }
@@ -55,12 +54,24 @@ public class CustomerServiceImp implements CustomerService{
         System.out.println("save:"+customer);
           dao.save(customer);
     }
-    
     @Override
-    public Customer find(String username, String password) {
-        System.out.println("find");
-        return dao.findCustomerByNamePassword(username,password);
+    public Customer find(String telephone) {
+        System.out.println("find Actived"+telephone);
+        return dao.findActived(telephone);
     }
+    @Override
+    public void active(String telephone) {
+          System.out.println("active telephone"+telephone);
+            dao.active(telephone);     
+    }
+    @Override
+    public Customer find(String telephone, String password) {
+           
+        System.out.println("findByTelephoneAndPassword:"+telephone+"---"+password);
+        return dao.findByTelephoneAndPassword(telephone,password);
+    }
+    
+   
   
 
 }

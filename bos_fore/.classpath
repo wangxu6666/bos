@@ -33,5 +33,15 @@
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="F:/javaee/Maven/org/apache/struts/xwork/xwork-core/2.3.24/xwork-core-2.3.24.jar" sourcepath="F:/javaee/Maven/org/apache/struts/xwork/xwork-core/2.3.24/xwork-core-2.3.24-sources.jar">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="org.eclipse.jst.component.archivename" value="xwork-core-2.3.24.jar"/>
+			<attribute name="maven.groupId" value="org.apache.struts.xwork"/>
+			<attribute name="maven.artifactId" value="xwork-core"/>
+			<attribute name="maven.version" value="2.3.24"/>
+			<attribute name="maven.scope" value="compile"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

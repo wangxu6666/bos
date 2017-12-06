@@ -1,8 +1,7 @@
 package com.itheima.bos.fore.web.action;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.ws.rs.core.MediaType;
 
@@ -13,9 +12,13 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
+import org.apache.struts2.convention.annotation.Result;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 
+import com.itheima.bos.utils.MailUtils;
 import com.itheima.bos.utils.SmsUtils;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
@@ -32,9 +35,11 @@ import crm.domain.bos.domain.Customer;
 @Controller
 @Scope("prototype")
 public class CustomerAction extends ActionSupport implements ModelDriven<Customer> {
-    
+    @Autowired
+    private RedisTemplate<String, String> template;
     private Customer model=new Customer();
     private String checkcode;
+    private String random;
     
     public void setCheckcode(String checkcode) {
         this.checkcode = checkcode;
@@ -45,19 +50,62 @@ public class CustomerAction extends ActionSupport implements ModelDriven<Custome
         return model;
     }
     
-    @Action("customerAction_regist")
+    @Action(value = "customerAction_regist",
+            results = {
+                    @Result(name = "success", location = "/signup-success.html",
+                            type = "redirect"),
+                    @Result(name = "error", location = "/signup-fail.html",
+                            type = "redirect")})
+   //校验验证码，注册，发送邮件
     public String regist()  {
         String code = (String) ServletActionContext.getRequest().getSession().getAttribute(model.getTelephone());
         System.out.println(code+"---"+checkcode);
         if (code.equals(checkcode)) {
-            System.out.println("正在注册");
             WebClient.create("http://localhost:8180/crm/webservice/cs/customer")
             .type(MediaType.APPLICATION_JSON)
             .post(model);
+            String activeCode = RandomStringUtils.randomNumeric(10);
+            template.opsForValue().set(model.getTelephone(), activeCode,30,TimeUnit.MINUTES);
+            MailUtils.sendMail(model.getEmail(), "激活邮件", "这是一封激活邮件，请在30分钟内"
+                    + "<a href='localhost:8280/bos_fore/active.action?telephone="+model.getTelephone()+"&random="+activeCode+"'>点击</a>完成激活");
+         
+        }else {
+            return "error";
         }
-        return NONE;
+        return SUCCESS;
     }
     
+    //校验邮件验证码，再将状态改为激活
+    @Action(value="active",results= {@Result(name="actived",location="actived.html",type="redirect"),
+            @Result(name="login",location="login.html",type="redirect")}
+    )
+    public String active() {
+        String activeCode = template.opsForValue().get(model.getTelephone());
+        if (StringUtils.isNotEmpty(activeCode)&&StringUtils.isNotEmpty(random)&&activeCode.equals(random)) {
+           //查看是否已经激活
+            Customer customer = WebClient.create("http://localhost:8180/crm/webservice/cs/customer")
+            .accept(MediaType.APPLICATION_JSON)
+            .query("telephone", model.getTelephone())
+            .type(MediaType.APPLICATION_JSON)
+            .get(Customer.class);
+          if (customer!=null) {
+            return "actived";
+          }else {
+              WebClient.create("http://localhost:8180/crm/webservice/cs/customer_active")
+              .type(MediaType.APPLICATION_JSON)
+              .query("telephone", model.getTelephone())
+              .put(null);     
+               return "login";
+          }
+        }
+        return NONE;
+        
+    }
+    
+    public void setRandom(String random) {
+        this.random = random;
+    }
+
     @Action("customerAction_sendCode")
     public String sendCode() throws IOException {
         String code = RandomStringUtils.randomNumeric(6);
@@ -73,11 +121,22 @@ public class CustomerAction extends ActionSupport implements ModelDriven<Custome
         return NONE;
     }
     
-    @Action("customerAction_login")
+    @Action(value="customerAction_login",results= {@Result(name="success",location="/myhome.html",type="redirect")
+    ,@Result(name="failed",location="loadfail.html",type="redirect")})
     public String login() {
-        
-        
-        return NONE;
+        String attribute = (String) ServletActionContext.getRequest().getSession().getAttribute("validateCode");
+        if (StringUtils.isNotEmpty(attribute)&&StringUtils.isNotEmpty(checkcode)&&attribute.equals(checkcode)) {
+            Customer customer = WebClient.create("http://localhost:8180/crm/webservice/cs/customer_login")
+            .accept(MediaType.APPLICATION_JSON)
+            .type(MediaType.APPLICATION_JSON)
+            .query("telephone", model.getTelephone())
+            .query("password", model.getPassword())
+            .get(Customer.class);
+            if (customer!=null) {
+                return SUCCESS;
+            }
+        }        
+        return "failed";
     }
 
 }

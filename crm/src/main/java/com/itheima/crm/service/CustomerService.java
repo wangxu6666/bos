@@ -31,7 +31,7 @@ public interface CustomerService {
     //未绑定地区的客户
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    @Path("/customer")
+    @Path("/customer_unbind")
     public List<Customer> findCustomersUnAssociated();
     
     //绑定客户和定区
@@ -45,7 +45,7 @@ public interface CustomerService {
     //找到已经绑定地区的客户
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    @Path("/customer/{fixedAreaId}")
+    @Path("/customer_bind")
     @Consumes({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON})
     public List<Customer> findCustomersAssociatedToFixedArea(@QueryParam("fixedAreaId")String fixedAreaId);
     
@@ -54,10 +54,23 @@ public interface CustomerService {
     @Path("/customer")
     public void save(Customer customer);
     
-    @POST
+    @GET
     @Path("/customer")
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    public Customer find(@QueryParam("username")String username,@QueryParam("password")String password);
+    public Customer find(@QueryParam("telephone")String telephone);
+    
+    @PUT
+    @Path("/customer_active")
+    @Consumes({MediaType.APPLICATION_JSON})
+    public void active(@QueryParam("telephone")String telephone);
+    
+    @GET
+    @Path("/customer_login")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Customer find(@QueryParam("telephone")String telephone,@QueryParam("password")String password);
+    
+   
 }
   
