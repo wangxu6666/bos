@@ -124,7 +124,6 @@ public class CourierAction extends CommonAction<Courier> {
     public String listajax() {
      List<Courier> list= service.listajax();
      listToJSON(list, new String[] {"fixedAreas"});
-     
         return NONE;
     }
     

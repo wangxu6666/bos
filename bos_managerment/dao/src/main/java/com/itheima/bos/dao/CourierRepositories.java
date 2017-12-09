@@ -20,7 +20,6 @@ public interface CourierRepositories extends JpaRepository<Courier, Long>,JpaSpe
     @Query("update Courier set deltag=1 where id=?")
     void updateState(Long id);
 
-   
     
     @Query("from Courier where deltag is null")
      List<Courier> findCourierNotDel();

@@ -16,6 +16,7 @@ import javax.persistence.TemporalType;
 /**
  * @description:档案类，记录所有的分类信息，在子档中
  */
+
 @Entity
 @Table(name = "T_ARCHIVE")
 public class Archive {
