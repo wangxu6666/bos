@@ -1,3 +1,4 @@
+
 package com.itheima.crm.service;
 
 import java.util.List;  
@@ -78,4 +79,3 @@ public interface CustomerService {
     @Consumes({MediaType.APPLICATION_JSON})
     public String findFixedIdByAddress(@QueryParam("address")String address);
 }
-  

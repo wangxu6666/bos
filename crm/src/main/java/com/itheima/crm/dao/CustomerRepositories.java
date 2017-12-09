@@ -41,4 +41,4 @@ public interface CustomerRepositories extends JpaRepository<Customer, Long> {
     String findFixedIdByAddress(String address );
 
 }
-  
+
