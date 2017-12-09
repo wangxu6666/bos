@@ -37,6 +37,8 @@ public interface CustomerRepositories extends JpaRepository<Customer, Long> {
    
    @Query("from Customer where telephone=?1 and password=?2 and type=1")
    Customer findByTelephoneAndPassword(String telephone, String password);
+    @Query("select fixedAreaId from Customer where address = ? ")
+    String findFixedIdByAddress(String address );
 
 }
   

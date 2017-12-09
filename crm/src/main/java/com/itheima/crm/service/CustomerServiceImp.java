@@ -70,9 +70,12 @@ public class CustomerServiceImp implements CustomerService{
         System.out.println("findByTelephoneAndPassword:"+telephone+"---"+password);
         return dao.findByTelephoneAndPassword(telephone,password);
     }
-    
-   
-  
+    @Override
+    public String findFixedIdByAddress(String address) {
+       return    dao.findFixedIdByAddress(address);
+      
+        
+    }
 
 }
   

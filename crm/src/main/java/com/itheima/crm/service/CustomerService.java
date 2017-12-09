@@ -72,5 +72,10 @@ public interface CustomerService {
     public Customer find(@QueryParam("telephone")String telephone,@QueryParam("password")String password);
     
    
+    @GET
+    @Path("/customer_fixedId")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public String findFixedIdByAddress(@QueryParam("address")String address);
 }
   
