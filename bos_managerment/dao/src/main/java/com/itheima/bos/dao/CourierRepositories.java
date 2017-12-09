@@ -15,7 +15,7 @@ import com.itheima.bos.domain.base.Courier;
  * Date:     Nov 29, 2017 10:00:22 PM <br/>       
  */
 public interface CourierRepositories extends JpaRepository<Courier, Long>,JpaSpecificationExecutor<Courier> {
-    
+   
     @Modifying
     @Query("update Courier set deltag=1 where id=?")
     void updateState(Long id);

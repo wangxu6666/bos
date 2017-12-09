@@ -16,7 +16,7 @@ import com.itheima.bos.domain.base.Area;
  */
 public interface AreaRepositories extends JpaRepository<Area, Long>{
 
-    public Area findByCity(String city);
+    public Area findByCity(String city);  
     
     
     @Query("from Area where city=? and id=?")
@@ -41,6 +41,9 @@ public interface AreaRepositories extends JpaRepository<Area, Long>{
     @Query("from Area a where a.province like ?1 or a.city like ?1 or a.district like ?1"
             + " or a.citycode like ?1 or a.postcode like ?1 or a.shortcode like ?1")
     public List<Area> findQ(String q);
+
+    @Query("from Area a where a.province like ?1 and a.city like ?2 and a.district like ?3")
+    public Area findByPCD(String province, String city, String district);
     
 }
   

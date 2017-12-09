@@ -68,16 +68,13 @@ public class SubAreaAction  extends CommonAction<SubArea>{
     @Action("subAreaAction_findNoBindFixedArea")
     public String findBindNoFixedArea() {
     List<SubArea> list=service.findNoBindFixedArea();
-   
     listToJSON(list, new String[] {"area"});
-   
         return NONE;
     }
     
     @Action(value="subAreaAction_bindFixedArea",results= {@Result(name="success",location="/pages/base/fixed_area.html",type="redirect")})
     public String bindFixedArea() {
-        
-        service.BindFixedArea(model.getId(),subAreaId);
+       service.BindFixedArea(model.getId(),subAreaId);
         return SUCCESS;
     }
 }
