@@ -3,6 +3,10 @@ package com.itheima.bos.fore.web.action;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import javax.jms.JMSException;
+import javax.jms.MapMessage;
+import javax.jms.Message;
+import javax.jms.Session;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -16,6 +20,8 @@ import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Controller;
 
 import com.itheima.bos.utils.MailUtils;
@@ -37,9 +43,12 @@ import crm.domain.bos.domain.Customer;
 public class CustomerAction extends ActionSupport implements ModelDriven<Customer> {
     @Autowired
     private RedisTemplate<String, String> template;
+    @Autowired
+    private JmsTemplate jTemplate;
     private Customer model=new Customer();
     private String checkcode;
     private String random;
+    
     
     
     public void setCheckcode(String checkcode) {
@@ -109,16 +118,29 @@ public class CustomerAction extends ActionSupport implements ModelDriven<Custome
 
     @Action("customerAction_sendCode")
     public String sendCode() throws IOException {
-        String code = RandomStringUtils.randomNumeric(6);
-        String sms = SmsUtils.sendSmsByWebService(model.getTelephone(), "尊敬的客户你好，您本次获取的验证码为："+code);
+      final  String code = RandomStringUtils.randomNumeric(6);
+    /*    String sms = SmsUtils.sendSmsByWebService(model.getTelephone(), "尊敬的客户你好，您本次获取的验证码为："+code);
         String flag = "failed";
         if (StringUtils.isNotEmpty(sms)&&sms.length()==16) {
             flag="ok";
            System.out.println(model.getTelephone()+"发送验证码"+code);
         }
         System.out.println(model.getTelephone()+"发送验证码"+code);
+      
+        ServletActionContext.getResponse().getWriter().write(flag);*/
+        //改写 发送信息到中间件
+        jTemplate.send("sms_queue", new MessageCreator() {
+            @Override
+            public Message createMessage(Session session) throws JMSException {
+               MapMessage mapMessage = session.createMapMessage();
+               mapMessage.setString("telephone", model.getTelephone());
+               mapMessage.setString("code","尊敬的客户你好，您本次获取的验证码为："+code );
+                // TODO Auto-generated method stub  
+                return mapMessage;
+            }
+        });
+        //发送信息有bos_sms完成   验证码需要本服务器保存        
         ServletActionContext.getRequest().getSession().setAttribute(model.getTelephone(), code);
-        ServletActionContext.getResponse().getWriter().write(flag);
         return NONE;
     }
     
