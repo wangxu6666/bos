@@ -49,8 +49,6 @@ public class CustomerAction extends ActionSupport implements ModelDriven<Custome
     private String checkcode;
     private String random;
     
-    
-    
     public void setCheckcode(String checkcode) {
         this.checkcode = checkcode;
     }

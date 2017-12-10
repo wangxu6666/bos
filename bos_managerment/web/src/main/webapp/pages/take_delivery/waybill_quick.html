@@ -152,7 +152,16 @@
 					onDblClickRow : doDblClickRow,
 					onAfterEdit : function(rowIndex, rowData, changes){
 						console.info(rowData);
+						alert("afterEdit");
 						editIndex = undefined;
+						$.post("../../waybillAction_save.action",rowData,function(result){
+							alert("得到result");
+							if(result=='0'){
+								alert("保存失败");
+							}else{
+								alert("保存成功");
+							}
+						})
 					}
 				});
 			});
