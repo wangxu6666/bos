@@ -339,7 +339,5 @@
 		</pluginManagement>
 	</build>
 
-	<modules>
-		<module>bos_sms</module>
-	</modules>
+	
 </project>
