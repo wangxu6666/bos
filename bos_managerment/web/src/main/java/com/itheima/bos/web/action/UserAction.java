@@ -10,6 +10,7 @@ import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
+import org.exolab.castor.xml.validators.StringValidator;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
@@ -39,7 +40,9 @@ public class UserAction extends CommonAction<User> {
     public String login() {
         String sCode=(String) ServletActionContext.getRequest().getSession().getAttribute("key");
         String code = ServletActionContext.getRequest().getParameter("code");
-        if (StringUtils.isNotEmpty(code)&&StringUtils.isNotEmpty(sCode)&&code.equalsIgnoreCase(sCode)) {
+     //   if (StringUtils.isNotEmpty(code)&&StringUtils.isNotEmpty(sCode)&&code.equalsIgnoreCase(sCode)) {
+       if (true) {
+       
             // 验证码比对成功
             // 从框架中获取Subject,代表当前用户
             Subject subject = SecurityUtils.getSubject();
@@ -57,6 +60,17 @@ public class UserAction extends CommonAction<User> {
         return "login";
     }
     
+    
+    @Action(value = "userAction_logout",
+            results = {
+                    @Result(name = "success", location = "/index.html",
+                            type = "redirect")})
+    public String logout() {
+       Subject subject = SecurityUtils.getSubject();
+       subject.logout();
+        
+        return SUCCESS;
+    }
 
 }
   

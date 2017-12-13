@@ -3,6 +3,7 @@ package com.itheima.bos.service;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.support.DaoSupport;
 import org.springframework.data.domain.Page;
@@ -36,7 +37,9 @@ public class CourierServiceImp implements CourierService{
         // TODO Auto-generated method stub  
         return (Page<Courier>) courierDao.findAll(page);
     }
+    
     @Override
+    @RequiresPermissions("delCourier")
     public void delete(String ids) {
           
        if (!StringUtils.isEmpty(ids)) {
@@ -47,6 +50,7 @@ public class CourierServiceImp implements CourierService{
       }
         
     }
+    @RequiresPermissions("findByPage")
     @Override
     public Page<Courier> pageQuery(Specification<Courier> specification,
             Pageable pageable) {
@@ -56,8 +60,6 @@ public class CourierServiceImp implements CourierService{
     }
     @Override
     public List<Courier> listajax() {
-          
-        // TODO Auto-generated method stub  
         return courierDao.findCourierNotDel();
     }
  

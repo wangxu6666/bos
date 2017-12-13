@@ -6,6 +6,7 @@ import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +28,13 @@ public class UserRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(
             PrincipalCollection arg0) {
-          
+       SimpleAuthorizationInfo  info = new SimpleAuthorizationInfo();
+       info.addStringPermission("findByPage");
+       info.addStringPermission("add");
+       info.addStringPermission("delCourier");
+       info.addRole("admin");
         // TODO Auto-generated method stub  
-        return null;
+        return info;
     }
     //认证方法
     @Override
@@ -42,14 +47,7 @@ public class UserRealm extends AuthorizingRealm {
        if (user==null) {
         return null;
         }
-       
-       
-       
-       AuthenticationInfo info = new SimpleAuthenticationInfo(user,user.getPassword(),getName());
-       
-        
-          
-        // TODO Auto-generated method stub  
+        AuthenticationInfo info = new SimpleAuthenticationInfo(user,user.getPassword(),getName());
         return info;
     }
 

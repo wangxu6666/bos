@@ -70,8 +70,9 @@
 	-->
 	<context:component-scan base-package="com.itheima.bos.service,com.itheima.bos.web" />
 
-	<!-- 开启事务注解 -->
-	<tx:annotation-driven transaction-manager="transactionManager" />
+	<!-- 开启事务注解强制使用cjlib -->
+<!-- 	<tx:annotation-driven transaction-manager="transactionManager" /> -->
+<tx:annotation-driven proxy-target-class="true" transaction-manager="transactionManager" />
 	<!--
 		#########################################################
 		指定Spring Data JPA要进行扫描的包,该包中的类框架会自动为其创建代理
@@ -114,12 +115,14 @@
 	-->
 	<property name="filterChainDefinitions">
 		<value>
-		    /css/*=anon
+		<!--     /css/*=anon
 		    /js/*=anon
 		    /images/*=anon
 		    /validatecode.jsp*=anon
 		    /userAction_login.action=anon
-			/** = authc
+		    /courierAction_save.action=perms['add']
+			/** = authc -->
+			/**=anon
 		</value>
 	</property>
 </bean>
@@ -128,5 +131,15 @@
 <property name="realm" ref="userRealm"/>
 </bean>
 
+<bean
+    class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator">
+    <!-- 强制使用cglib方式创建代理对象 -->
+    <property name="proxyTargetClass" value="true"></property>
+</bean>
+<!-- 配置切面 -->
+<bean
+    class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+    <property name="securityManager" ref="securityManager"></property>
+</bean>
 
 </beans>
