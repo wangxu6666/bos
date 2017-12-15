@@ -1,5 +1,7 @@
 package com.itheima.bos.service.system;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +33,13 @@ public class PermissionServiceImp implements PermissionService {
     @Override
     public void save(Permission model) {
          pDao.save(model); 
+    }
+
+    @Override
+    public List<Permission> findAll() {
+          
+        // TODO Auto-generated method stub  
+        return pDao.findAll();
     }
 
 }

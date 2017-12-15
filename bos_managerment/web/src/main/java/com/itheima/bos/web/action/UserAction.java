@@ -1,5 +1,7 @@
 package com.itheima.bos.web.action;
 
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -11,10 +13,15 @@ import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
 import org.exolab.castor.xml.validators.StringValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 
 import com.itheima.bos.domain.system.User;
+import com.itheima.bos.service.system.UserService;
 import com.itheima.bos.web.common.CommonAction;
 
 /**  
@@ -29,8 +36,20 @@ import com.itheima.bos.web.common.CommonAction;
 public class UserAction extends CommonAction<User> {
     
     
+    /**  
+     * serialVersionUID:TODO(用一句话描述这个变量表示什么).  
+     * @since JDK 1.6  
+     */
+    private static final long serialVersionUID = 2427416382257389431L;
     private User model=getModel();
+    @Autowired
+    private UserService userService;
     
+    private Long[] roleIds;
+    public void setRoleIds(Long[] roleIds) {
+        this.roleIds = roleIds;
+    }
+
     @Action(value = "userAction_login",
             results = {
                     @Result(name = "success", location = "/index.html",
@@ -70,6 +89,24 @@ public class UserAction extends CommonAction<User> {
        subject.logout();
         
         return SUCCESS;
+    }
+    
+    
+    @Action(value="userAction_save",results= {@Result(name="success",location="/pages/system/userlist.html",type="redirect")})
+    public String save() {
+        userService.save(getModel(),roleIds);
+        return SUCCESS;
+    }
+    
+    
+    @Action("userAction_findByPage")
+    public String findByPage() {
+        Pageable pageable = new PageRequest(page-1, rows);
+       Page<User> page= userService.findByPage(pageable);
+        pageToJSON(page, new String[] {"roles"});
+        
+        return NONE;
+        
     }
 
 }

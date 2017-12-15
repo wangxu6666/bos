@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.itheima.bos.dao.MenuReposotories;
 import com.itheima.bos.domain.system.Menu;
+import com.itheima.bos.domain.system.User;
 
 /**  
  * ClassName:MenuServiceImp <br/>  
@@ -41,6 +42,15 @@ public class MenuServiceImp implements MenuService {
           
         // TODO Auto-generated method stub  
         return menuDao.findAll(pageable);
+    }
+
+    @Override
+    public List<Menu> findByUser(User user) {
+          if ("admin".equals(user.getUsername())) {
+            return menuDao.findAll();
+        }else {
+            return menuDao.findByUser(user.getId());
+        }
     }
     
 }

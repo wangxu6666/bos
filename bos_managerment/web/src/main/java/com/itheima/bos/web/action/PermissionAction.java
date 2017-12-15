@@ -1,5 +1,7 @@
 package com.itheima.bos.web.action;
 
+import java.util.List;
+
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -36,6 +38,13 @@ public class PermissionAction  extends CommonAction<Permission>{
         Pageable pageable = new PageRequest(page-1, rows);
         Page<Permission> p=  pService.findByPage(pageable);
         pageToJSON(p, new String[] {"roles"});
+        return NONE;
+    }
+    
+    @Action("permissionAction_findAll")
+    public String findAll() {
+      List<Permission> list=  pService.findAll();
+      listToJSON(list, new String[] {"roles"});
         return NONE;
     }
     

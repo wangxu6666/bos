@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.itheima.bos.domain.system.Menu;
+import com.itheima.bos.domain.system.User;
 
 /**  
  * ClassName:MenuService <br/>  
@@ -19,6 +20,8 @@ public interface MenuService {
     void save(Menu model);
 
     Page<Menu> findByPage(Pageable pageable);
+
+    List<Menu> findByUser(User user);
 
 }
   

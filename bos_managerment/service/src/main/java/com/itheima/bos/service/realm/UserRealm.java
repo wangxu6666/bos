@@ -1,5 +1,9 @@
 package com.itheima.bos.service.realm;
 
+import java.util.Collection;
+import java.util.List;
+
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -9,11 +13,18 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.itheima.bos.dao.UserDao;
+import com.itheima.bos.dao.PermissionRepositories;
+import com.itheima.bos.dao.RoleRepositories;
+import com.itheima.bos.dao.UserRepositories;
+import com.itheima.bos.domain.system.Permission;
+import com.itheima.bos.domain.system.Role;
 import com.itheima.bos.domain.system.User;
+
+
 
 /**  
  * ClassName:UserRealm <br/>  
@@ -23,17 +34,40 @@ import com.itheima.bos.domain.system.User;
 @Component
 public class UserRealm extends AuthorizingRealm {
     @Autowired
-    private UserDao dao;
+    private UserRepositories dao;
+    
+    @Autowired
+    private RoleRepositories rDao;
+    
+    @Autowired 
+    private PermissionRepositories pDao;
    //授权方法
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(
             PrincipalCollection arg0) {
        SimpleAuthorizationInfo  info = new SimpleAuthorizationInfo();
-       info.addStringPermission("findByPage");
-       info.addStringPermission("add");
-       info.addStringPermission("delCourier");
-       info.addRole("admin");
-        // TODO Auto-generated method stub  
+       //取出认证的用户
+       User user = (User) SecurityUtils.getSubject().getPrincipal();
+       //判断是否为admin  是 添加所有权限  不是根据ID查找权限添加进去
+       if (user.getUsername().equals("admin")) {
+           List<Role> all = rDao.findAll();
+          for (Role r : all) {
+            info.addRole(r.getKeyword());
+        }
+          List<Permission> permissions = pDao.findAll();
+          for (Permission permission : permissions) {
+              info.addStringPermission(permission.getKeyword());
+          }
+    }else {
+        List<Role> all = rDao.findByUserId(user.getId());
+        for (Role r : all) {
+          info.addRole(r.getKeyword());
+      }
+        List<Permission> permissions = pDao.findByUserId(user.getId());
+        for (Permission permission : permissions) {
+            info.addStringPermission(permission.getKeyword());
+        }
+    }
         return info;
     }
     //认证方法

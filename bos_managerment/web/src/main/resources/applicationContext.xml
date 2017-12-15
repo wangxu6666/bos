@@ -126,10 +126,22 @@
 		</value>
 	</property>
 </bean>
+
+<!-- 注册缓存管理器  -->
+<bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+    <property name="cacheManagerConfigFile" value="classpath:ehcache.xml" />
+</bean>
+
+<!-- 将缓存管理器注入安全管理器 -->
 <!-- 注册安全管理器 -->
 <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
-<property name="realm" ref="userRealm"/>
+    <!-- 注册realm -->
+    <property name="realm" ref="userRealm" />
+    <!-- 注入缓存管理器 -->
+    <property name="cacheManager" ref="cacheManager" />
 </bean>
+
+
 
 <bean
     class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator">

@@ -2,6 +2,7 @@ package com.itheima.bos.web.action;
 
 import java.util.List;
 
+import org.apache.shiro.SecurityUtils;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 
 import com.itheima.bos.domain.system.Menu;
+import com.itheima.bos.domain.system.User;
 import com.itheima.bos.service.system.MenuService;
 import com.itheima.bos.web.common.CommonAction;
 
@@ -56,6 +58,14 @@ public class MenuAction extends CommonAction<Menu> {
         Pageable pageable = new PageRequest(page-1, rows);
         Page<Menu> p=  menuService.findByPage(pageable);
         pageToJSON(p, new String[] {"roles","parentMenu","childrenMenus"});
+        return NONE;
+    }
+    
+    @Action(value="menuAction_findByUser")
+    public String getMenu() {
+       User user = (User) SecurityUtils.getSubject().getPrincipal();
+       List<Menu> list=   menuService.findByUser(user);
+        listToJSON(list, new String[] {"roles","childrenMenus","parentMenu","children"});
         return NONE;
     }
     
