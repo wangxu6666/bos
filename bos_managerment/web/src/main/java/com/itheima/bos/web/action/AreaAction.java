@@ -14,6 +14,7 @@ import javax.imageio.stream.FileImageInputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
@@ -127,7 +128,35 @@ public class AreaAction extends CommonAction<Area> {
         return NONE;
     }
     
-    
+/*   @Action("areaAction_exportExcel")
+    public String exportExcel() {
+       List<Area> all = service.findAll();
+       // 在内存中创建Excel文件
+       HSSFWorkbook workbook = new HSSFWorkbook();
+       //创建工作簿
+      HSSFSheet sheet = workbook.createSheet("分区信息统计");
+      //创建第一行
+      HSSFRow titleRow = sheet.createRow(0);
+      titleRow.createCell(0).setCellValue("分区编号");
+      titleRow.createCell(1).setCellValue("分区开始编号");
+      titleRow.createCell(2).setCellValue("分区结束编号");
+      titleRow.createCell(3).setCellValue("分区关键字");
+      titleRow.createCell(4).setCellValue("辅助关键字");
+      titleRow.createCell(5).setCellValue("区域信息");
+      
+      for (Area area : all) {
+       HSSFRow row = sheet.createRow(sheet.getLastRowNum()+1);
+       row.createCell(0).setCellValue(area.getId());
+       row.createCell(1).setCellValue(area.get);
+       row.createCell(0).setCellValue();
+       row.createCell(0).setCellValue();
+       row.createCell(0).setCellValue();
+       row.createCell(0).setCellValue();
+    }
+      
+      
+       return NONE; 
+    }*/
 
 }
   

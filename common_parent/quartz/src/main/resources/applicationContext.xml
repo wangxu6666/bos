@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:jpa="http://www.springframework.org/schema/data/jpa" xmlns:task="http://www.springframework.org/schema/task"
+    xmlns:jaxws="http://cxf.apache.org/jaxws" xmlns:soap="http://cxf.apache.org/bindings/soap"
+    xsi:schemaLocation="
+                 http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                 http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+                 http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                 http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+                 http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+                 http://www.springframework.org/schema/data/jpa 
+                 http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+                 http://cxf.apache.org/bindings/soap 
+              http://cxf.apache.org/schemas/configuration/soap.xsd
+              http://cxf.apache.org/jaxws 
+              http://cxf.apache.org/schemas/jaxws.xsd">
+    <!-- 指定自定义任务对象 -->
+    <bean id="myJob" class="com.itheima.jobs.MyJob"></bean>
+    <!-- 指定jobdetail,通过反射调用自定义任务对象 -->
+    <bean id="jobDetail"
+       class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+       <!-- 注入要调用的任务对象 -->
+       <property name="targetObject" ref="myJob" />
+       <!-- 指定要调用的方法 -->
+       <property name="targetMethod" value="doSomething" />
+    </bean>
+    <!-- 指定触发器 -->
+    <bean id="trigger"
+       class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+       <!-- 注入jobdetail -->
+       <property name="jobDetail" ref="jobDetail" />
+       <!-- 指定调度规则 -->
+       <property name="cronExpression">
+         <value>0/5 * * * * ?</value>
+       </property>
+    </bean>
+    <!-- 指定调度工厂 -->
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+       <!-- 注入触发器 -->
+       <property name="triggers">
+         <array>
+          <ref bean="trigger" />
+         </array>
+       </property>
+    </bean>
+</beans>

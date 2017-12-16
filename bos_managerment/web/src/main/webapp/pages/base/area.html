@@ -48,7 +48,12 @@
 				id : 'button-import',
 				text : '导入',
 				iconCls : 'icon-redo'
-			}];
+			},{
+				id : 'button-export',
+				text : '导出Excel',
+				iconCls : 'icon-undo',
+				handler : doExportExcel
+			} ];
 			// 定义列
 			var columns = [ [ {
 				field : 'id',
@@ -125,6 +130,11 @@
 		
 			function doDblClickRow(){
 				alert("双击表格数据...");
+			}
+			
+			function doExportExcel() {
+				//window.location.href = "../../areaAction_exportExcel.action"
+				alert("未实现");
 			}
 		</script>
 	</head>

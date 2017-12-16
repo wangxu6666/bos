@@ -115,14 +115,14 @@
 	-->
 	<property name="filterChainDefinitions">
 		<value>
-		<!--     /css/*=anon
+		    /css/*=anon
 		    /js/*=anon
 		    /images/*=anon
 		    /validatecode.jsp*=anon
 		    /userAction_login.action=anon
 		    /courierAction_save.action=perms['add']
-			/** = authc -->
-			/**=anon
+			/** = authc
+			<!-- /**=anon -->
 		</value>
 	</property>
 </bean>
@@ -141,8 +141,6 @@
     <property name="cacheManager" ref="cacheManager" />
 </bean>
 
-
-
 <bean
     class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator">
     <!-- 强制使用cglib方式创建代理对象 -->
@@ -154,4 +152,34 @@
     <property name="securityManager" ref="securityManager"></property>
 </bean>
 
+  <!-- 指定自定义任务对象 -->
+    <bean id="sendEamil" class="com.itheima.bos.jobs.SendEmail"></bean>
+ <!-- 指定jobdetail,通过反射调用自定义任务对象 -->
+    <bean id="jobDetail"
+       class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+       <!-- 注入要调用的任务对象 -->
+       <property name="targetObject" ref="sendEamil" />
+       <!-- 指定要调用的方法 -->
+       <property name="targetMethod" value="send" />
+    </bean>
+    
+     <!-- 指定触发器 -->
+    <bean id="trigger"
+       class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+       <!-- 注入jobdetail -->
+       <property name="jobDetail" ref="jobDetail" />
+       <!-- 指定调度规则 -->
+       <property name="cronExpression">
+         <value>0 0 0 * * ? </value>
+       </property>
+    </bean>
+    <!-- 指定调度工厂 -->
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+       <!-- 注入触发器 -->
+       <property name="triggers">
+         <array>
+          <ref bean="trigger" />
+         </array>
+       </property>
+    </bean>
 </beans>

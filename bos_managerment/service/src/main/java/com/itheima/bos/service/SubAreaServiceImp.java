@@ -53,6 +53,12 @@ public class SubAreaServiceImp  implements SubAreaService {
         }
         
     }
+    @Override
+    public List<SubArea> findAll() {
+          
+        // TODO Auto-generated method stub  
+        return dao.findAll();
+    }
 
 }
   

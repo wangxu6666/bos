@@ -25,5 +25,7 @@ public interface SubAreaService {
 
     void BindFixedArea(Long id, List<Long> subAreaId);
 
+    List<SubArea> findAll();
+
 }
   

@@ -25,12 +25,14 @@ import com.itheima.bos.domain.base.Courier;
 public class CourierServiceImp implements CourierService{
     @Autowired
     private CourierRepositories courierDao;
+    @RequiresPermissions("courier:add")
     @Override
     public void save(Courier model) {
           courierDao.save(model);
         // TODO Auto-generated method stub  
         
     }
+    @RequiresPermissions("courier:list")
     @Override
     public Page<Courier> findByPage(Pageable page) {
           
@@ -39,7 +41,6 @@ public class CourierServiceImp implements CourierService{
     }
     
     @Override
-    @RequiresPermissions("delCourier")
     public void delete(String ids) {
           
        if (!StringUtils.isEmpty(ids)) {
@@ -50,7 +51,7 @@ public class CourierServiceImp implements CourierService{
       }
         
     }
-    @RequiresPermissions("findByPage")
+    @RequiresPermissions("courier:list")
     @Override
     public Page<Courier> pageQuery(Specification<Courier> specification,
             Pageable pageable) {

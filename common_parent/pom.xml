@@ -340,4 +340,7 @@
 	</build>
 
 	
+	<modules>
+		<module>quartz</module>
+	</modules>
 </project>

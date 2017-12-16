@@ -11,6 +11,7 @@ import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
+import org.apache.shiro.cache.Cache;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
@@ -67,6 +68,12 @@ public class UserRealm extends AuthorizingRealm {
         for (Permission permission : permissions) {
             info.addStringPermission(permission.getKeyword());
         }
+    }
+     Cache<Object, AuthenticationInfo> cache = getAuthenticationCache();
+    if (cache==null) {
+        System.out.println("没有缓存");
+    }else {
+        System.out.println("有缓存");
     }
         return info;
     }
