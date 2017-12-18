@@ -7,9 +7,6 @@
         <dependent-module archiveName="utils-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/utils/utils">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="domain-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/domain/domain">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
         <property name="context-root" value="bos_fore"/>
         <property name="java-output-path" value="/bos_fore/target/classes"/>
     </wb-module>
